@@ -9,6 +9,1298 @@
   <!-- Leaflet Map CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+/* HydraRide - Smart Hydration & Heat Safety Dashboard
+   Clean, modern, responsive styling with Light & Dark mode support
+   Water-blue primary accent, amber/coral warnings, large typography */
+
+:root {
+  /* Color Palette - Light Mode */
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-hover: #e2e8f0;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* Water Blue Accent */
+  --water-50: #f0f9ff;
+  --water-100: #e0f2fe;
+  --water-200: #bae6fd;
+  --water-300: #7dd3fc;
+  --water-400: #38bdf8;
+  --water-500: #0ea5e9;
+  --water-600: #0284c7;
+  --water-700: #0369a1;
+  --primary: var(--water-600);
+  --primary-light: var(--water-500);
+  --primary-glow: rgba(14, 165, 233, 0.25);
+
+  /* Alert & Status Colors */
+  --color-success: #10b981;
+  --color-success-bg: #ecfdf5;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-info: #0284c7;
+  --color-info-bg: #f0f9ff;
+
+  /* Shadows & Radius */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --max-width: 1240px;
+  --header-height: 72px;
+  --transition: all 0.2s ease-in-out;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #090d16;
+  --bg-surface: #0f172a;
+  --bg-surface-alt: #1e293b;
+  --bg-card: #111a2e;
+  --bg-hover: #1e293b;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: #1e293b;
+  --border-strong: #334155;
+
+  --water-50: #082f49;
+  --water-100: #0c4a6e;
+  --water-200: #075985;
+  --water-300: #0284c7;
+  --water-400: #38bdf8;
+  --water-500: #38bdf8;
+  --water-600: #0ea5e9;
+  --water-700: #7dd3fc;
+  --primary: var(--water-400);
+  --primary-light: var(--water-300);
+  --primary-glow: rgba(56, 189, 248, 0.3);
+
+  --color-success: #34d399;
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(245, 158, 11, 0.15);
+  --color-danger: #f87171;
+  --color-danger-bg: rgba(239, 68, 68, 0.15);
+  --color-info: #38bdf8;
+  --color-info-bg: rgba(14, 165, 233, 0.15);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.6);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-size: 15px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: var(--transition);
+}
+
+/* Layout Container */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* Header & Navigation Bar */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--water-100);
+  color: var(--water-700);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+  margin-left: 0.25rem;
+  border: 1px solid var(--water-200);
+}
+
+[data-theme="dark"] .brand-badge {
+  background: var(--water-50);
+  color: var(--water-400);
+  border-color: var(--water-200);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 0.35rem;
+}
+
+.nav-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.nav-item a:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-item a.active {
+  background-color: var(--water-100);
+  color: var(--water-700);
+  font-weight: 600;
+}
+
+[data-theme="dark"] .nav-item a.active {
+  background-color: rgba(14, 165, 233, 0.18);
+  color: var(--water-400);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+/* Simulation tag */
+.sim-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: var(--radius-full);
+}
+
+[data-theme="dark"] .sim-pill {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+.sim-pill .dot {
+  width: 6px;
+  height: 6px;
+  background: #f59e0b;
+  border-radius: 50%;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  font-size: 1.05rem;
+  transition: var(--transition);
+}
+
+.btn-icon:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.btn-icon.active {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Rider status sub-bar */
+.rider-subbar {
+  background: var(--bg-surface-alt);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.45rem 0;
+  font-size: 0.82rem;
+}
+
+.rider-subbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rider-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.rider-shift-clock {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--bg-surface);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.shift-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.status-live {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-paused {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Page Main */
+.main-content {
+  flex: 1;
+  padding: 1.5rem 0 3rem;
+}
+
+/* Page Title & Section Headers */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* Banner Alerts */
+.alert-banner {
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  animation: slideDown 0.25s ease-out;
+  border: 1px solid transparent;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.alert-banner.alert-warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+[data-theme="dark"] .alert-banner.alert-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fde68a;
+}
+
+.alert-banner.alert-danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+[data-theme="dark"] .alert-banner.alert-danger {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.alert-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.alert-icon {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.alert-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: var(--transition);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--water-600) 0%, var(--water-500) 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(14, 165, 233, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--water-700) 0%, var(--water-600) 100%);
+  box-shadow: 0 4px 8px rgba(14, 165, 233, 0.35);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  text-decoration: none;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+}
+
+/* Card Components */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.card-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-alt);
+  color: var(--text-secondary);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.25rem;
+}
+
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-7 { grid-column: span 7; }
+.col-6 { grid-column: span 6; }
+.col-5 { grid-column: span 5; }
+.col-4 { grid-column: span 4; }
+
+/* Big Metric Readout */
+.metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0.4rem 0;
+}
+
+.metric-big {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.metric-unit {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.metric-sub {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Hydration Pack Graphic Widget */
+.pack-widget-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.pack-visual {
+  position: relative;
+  width: 130px;
+  height: 220px;
+  background: var(--bg-surface-alt);
+  border: 3px solid var(--border-strong);
+  border-radius: 24px 24px 32px 32px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.pack-cap {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 38px;
+  height: 14px;
+  background: #475569;
+  border-radius: 4px 4px 0 0;
+  z-index: 5;
+}
+
+.pack-hose {
+  position: absolute;
+  bottom: 12px;
+  right: -10px;
+  width: 24px;
+  height: 36px;
+  border-bottom: 4px solid var(--water-500);
+  border-right: 4px solid var(--water-500);
+  border-radius: 0 0 16px 0;
+  pointer-events: none;
+}
+
+.pack-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0%;
+  background: linear-gradient(180deg, var(--water-400) 0%, var(--water-600) 100%);
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.pack-wave {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  animation: waveMotion 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes waveMotion {
+  from { transform: scaleX(0.95) translateY(1px); }
+  to { transform: scaleX(1.05) translateY(-1px); }
+}
+
+/* Target Pace Dashed Marker */
+.pack-target-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-top: 2px dashed #f59e0b;
+  z-index: 10;
+  pointer-events: none;
+  transition: bottom 0.5s ease;
+}
+
+.pack-target-label {
+  position: absolute;
+  right: 4px;
+  top: -16px;
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.pack-graduations {
+  position: absolute;
+  left: 6px;
+  top: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 8;
+  font-size: 0.62rem;
+  font-family: ui-monospace, monospace;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.pack-mark {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.5);
+  width: 14px;
+}
+
+.pack-stats {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat-label {
+  color: var(--text-muted);
+}
+
+.stat-val {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Progress bar */
+.progress-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-surface-alt);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: 0.4rem 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--water-500) 0%, var(--water-600) 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.progress-bar-fill.warning {
+  background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+}
+
+.progress-bar-fill.danger {
+  background: linear-gradient(90deg, #ef4444 0%, #b91c1c 100%);
+}
+
+/* Body Temp Canvas */
+.temp-chart-container {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  margin-top: 0.5rem;
+}
+
+.temp-chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Simulation Controls Panel */
+.sim-controls-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.controls-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+/* Range Slider */
+.temp-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-surface-alt);
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.temp-slider-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.temp-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #0ea5e9 0%, #f59e0b 60%, #ef4444 100%);
+  outline: none;
+}
+
+.temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--text-primary);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.temp-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--text-primary);
+  cursor: pointer;
+}
+
+.temp-slider-val {
+  font-family: ui-monospace, monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 48px;
+  text-align: right;
+}
+
+/* Shift Scrubber & Progress Bar */
+.shift-timeline-wrap {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.shift-timeline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.shift-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-surface-alt);
+  border-radius: var(--radius-full);
+  position: relative;
+  overflow: hidden;
+}
+
+.shift-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  transition: width 0.25s linear;
+}
+
+/* Water Points Map Layout */
+.map-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.25rem;
+  height: calc(100vh - 210px);
+  min-height: 520px;
+}
+
+.map-container-wrap {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+}
+
+#waterMap {
+  width: 100%;
+  height: 100%;
+}
+
+.map-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.water-point-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.water-point-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.water-point-card.featured {
+  border: 2px solid #10b981;
+  background: var(--color-success-bg);
+}
+
+.water-point-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.water-point-type {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.water-point-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-full);
+}
+
+.status-working {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+[data-theme="dark"] .status-working {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+.water-point-dist {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+
+/* Shift Summary Components */
+.score-hero-card {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-surface-alt) 100%);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 8px solid var(--water-500);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  box-shadow: 0 4px 12px var(--primary-glow);
+  flex-shrink: 0;
+}
+
+.score-num {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.score-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hourly-chart-wrap {
+  width: 100%;
+  height: 240px;
+  margin-top: 1rem;
+}
+
+.hourly-chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* History Log Table */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.data-table th {
+  background: var(--bg-surface-alt);
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.data-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover td {
+  background: var(--bg-hover);
+}
+
+/* Impact & Research Page */
+.impact-hero {
+  margin-bottom: 2rem;
+  max-width: 800px;
+}
+
+.impact-hero-lead {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 0.5rem;
+}
+
+.stat-callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.stat-callout-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-callout-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary);
+}
+
+.stat-callout-card.danger::before {
+  background: var(--color-danger);
+}
+
+.stat-callout-card.warning::before {
+  background: var(--color-warning);
+}
+
+.stat-callout-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.stat-callout-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0.4rem 0 0.5rem;
+}
+
+.stat-callout-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.stat-callout-source a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.research-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.citation-card {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.citation-header {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.citation-source-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+}
+
+.placeholder-pill {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  border: 1px dashed #94a3b8;
+  color: #475569;
+  font-size: 0.75rem;
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .placeholder-pill {
+  background: #1e293b;
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+/* Footer */
+.site-footer {
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem 0;
+  margin-top: auto;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .col-12, .col-8, .col-7, .col-6, .col-5, .col-4 {
+    grid-column: span 1;
+  }
+  .map-layout-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .map-container-wrap {
+    height: 400px;
+  }
+  .map-sidebar {
+    height: 340px;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-inner {
+    height: auto;
+    padding: 0.75rem 0;
+    flex-wrap: wrap;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    padding-top: 0.5rem;
+  }
+  .nav-item a {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.82rem;
+  }
+  .controls-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .controls-group {
+    justify-content: space-between;
+  }
+  .temp-slider-wrap {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .temp-slider {
+    flex: 1;
+  }
+}
+
+  </style>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/></svg>">
 </head>
 <body>
@@ -141,8 +1433,1343 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   
   <!-- HydraRide Scripts -->
-  <script src="js/hydra-core.js"></script>
-  <script src="js/shared-ui.js"></script>
-  <script src="js/map.js"></script>
+  <script>
+/**
+ * HydraRide - Core Simulation & Telemetry Engine
+ * 
+ * IMPORTANT ARCHITECTURAL REQUIREMENT:
+ * "Put all data in one function, getReading(), so the simulated source
+ * can later be replaced by real hydrapack data."
+ * 
+ * In production hardware:
+ * - getReading() will interface with Web Bluetooth API (BLE GATT characteristics),
+ *   onboard ESP32 MQTT telemetry, or a local WebSocket.
+ * In this demo:
+ * - getReading() generates biothermal & hydrapack telemetry synchronized
+ *   across pages via localStorage.
+ */
+
+(function (global) {
+  'use strict';
+
+  const STORAGE_KEY = 'hydraride_shift_state_v1';
+  const SETTINGS_KEY = 'hydraride_settings_v1';
+
+  // Simulation Timing Configuration:
+  // 1 shift = 8 hours (480 minutes), from 11:00 AM to 07:00 PM.
+  // Full shift runs in ~100 real seconds.
+  // 480 shift minutes / 100 seconds = 4.8 shift minutes per real second.
+  // We tick every 250ms (4 times/sec), so each tick = 1.2 shift minutes.
+  const SHIFT_START_MINUTES = 11 * 60; // 660 mins (11:00 AM)
+  const SHIFT_END_MINUTES = 19 * 60;   // 1140 mins (07:00 PM)
+  const TOTAL_SHIFT_MINUTES = 480;      // 8 hours
+  const TICK_INTERVAL_MS = 250;
+  const SHIFT_MINUTES_PER_TICK = 1.2;
+
+  // Initial / Default State
+  function createInitialState() {
+    return {
+      version: 1,
+      riderId: 'Rider #214',
+      riderName: 'Aarav Sharma',
+      shiftDate: new Date().toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }),
+      
+      // Simulation Progress
+      elapsedShiftMinutes: 0, // 0 to 480
+      isSimulating: false,
+      speedMultiplier: 1.0,
+      
+      // Ambient & Biothermal Conditions
+      outsideTempC: 38,       // Slider 30 - 45 °C
+      bodyTempC: 36.8,        // Simulated 36.5 to 38.5 °C
+      peakBodyTempC: 36.8,
+
+      // Hydration Pack Tank (1.5 L = 1500 ml)
+      tankCapacityMl: 1500,
+      tankLevelMl: 1500,      // Each sip lowers it, Refill resets it
+
+      // Hydration Totals & Logs
+      totalWaterDrunkMl: 0,
+      lastSipMl: 0,
+      minutesSinceLastSip: 0,
+      nextAutoSipAtMinute: Math.floor(25 + Math.random() * 30), // first auto sip around min 25-55
+
+      // Reminders & Alerts
+      reminderDismissedUntil: 0,
+      missedRemindersCount: 0,
+      lastReminderTriggeredAt: -999,
+
+      // Historical Series
+      sipsLog: [],             // { shiftMinute, clockStr, ml, bodyTempC, outsideTempC }
+      bodyTempHistory: [       // for trend graph: sample every ~10 shift minutes
+        { shiftMinute: 0, clockStr: '11:00 AM', bodyTempC: 36.8, outsideTempC: 38 }
+      ],
+      hourlyIntake: [0, 0, 0, 0, 0, 0, 0, 0], // 8 hours of shift
+
+      // Rider GPS location in Gurugram (Sector 29 Delivery Hub)
+      riderLocation: {
+        lat: 28.4682,
+        lng: 77.0645,
+        area: 'Sector 29 / Leisure Valley, Gurugram'
+      }
+    };
+  }
+
+  // Load from localStorage or initialize
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.version === 1) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('HydraRide: Failed to load state from localStorage', e);
+    }
+    return createInitialState();
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      console.warn('HydraRide: Failed to save state to localStorage', e);
+    }
+  }
+
+  // Settings: Audio & Notifications
+  let settings = {
+    soundEnabled: true,
+    notificationsEnabled: false
+  };
+
+  try {
+    const savedSettings = localStorage.getItem(SETTINGS_KEY);
+    if (savedSettings) {
+      settings = Object.assign(settings, JSON.parse(savedSettings));
+    }
+  } catch (e) {}
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (e) {}
+  }
+
+  // Web Audio API Synthesizer (Zero external dependencies)
+  let audioCtx = null;
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  function playSound(type) {
+    if (!settings.soundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+
+      if (type === 'sip') {
+        // Cheerful dual water droplet chime (440Hz -> 880Hz)
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'reminder') {
+        // Two-pulse hydration attention alert
+        [0, 0.18].forEach(delay => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(659.25, now + delay); // E5
+          gain.gain.setValueAtTime(0.22, now + delay);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.14);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + delay);
+          osc.stop(now + delay + 0.15);
+        });
+      } else if (type === 'refill') {
+        // Ascending harmonic chord for tank replenishment
+        [329.63, 440, 554.37, 659.25].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.07);
+          gain.gain.setValueAtTime(0.14, now + i * 0.07);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.07);
+          osc.stop(now + i * 0.07 + 0.3);
+        });
+      } else if (type === 'heat_alert') {
+        // Deeper warning tone for heat stress
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.linearRampToValueAtTime(370, now + 0.25);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      }
+    } catch (e) {
+      console.warn('Audio play failed:', e);
+    }
+  }
+
+  // Browser Notifications
+  function requestNotificationPermission() {
+    if ('Notification' in window) {
+      Notification.requestPermission().then(perm => {
+        settings.notificationsEnabled = (perm === 'granted');
+        saveSettings();
+        if (perm === 'granted') {
+          new Notification('HydraRide Notifications Enabled', {
+            body: 'You will receive heat and hydration safety reminders.',
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230ea5e9"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'
+          });
+        }
+      });
+    }
+  }
+
+  function triggerSystemNotification(title, body) {
+    if ('Notification' in window && Notification.permission === 'granted' && settings.notificationsEnabled) {
+      try {
+        new Notification(title, {
+          body: body,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230ea5e9"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>'
+        });
+      } catch (e) {}
+    }
+  }
+
+  // Time & Math Helper Utilities
+  function minutesToClockStr(shiftMinutes) {
+    const totalMins = SHIFT_START_MINUTES + Math.min(TOTAL_SHIFT_MINUTES, Math.max(0, shiftMinutes));
+    const h24 = Math.floor(totalMins / 60);
+    const m = Math.floor(totalMins % 60);
+    const period = h24 >= 12 ? 'PM' : 'AM';
+    const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+    return `${h12.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${period}`;
+  }
+
+  // Heat-Based Daily Goal Formula:
+  // "goal = 2000 ml + 100 ml for every °C above 30 (rounded to 100 ml)"
+  function calculateHeatGoal(outsideTempC) {
+    const baseGoal = 2000;
+    const excessTemp = Math.max(0, outsideTempC - 30);
+    const addedWater = excessTemp * 100;
+    const rawGoal = baseGoal + addedWater;
+    return Math.round(rawGoal / 100) * 100;
+  }
+
+  // Simulated Rider Location wandering in Gurugram
+  function getRiderCurrentLocation(progressRatio) {
+    // Delivery route between Cyber Hub (28.4952, 77.0887), Sector 29 (28.4682, 77.0645),
+    // and IFFCO Chowk / Galleria (28.4673, 77.0864).
+    const routeWaypoints = [
+      { lat: 28.4682, lng: 77.0645, area: 'Sector 29 Market' },
+      { lat: 28.4721, lng: 77.0726, area: 'IFFCO Chowk Crossing' },
+      { lat: 28.4818, lng: 77.0927, area: 'MG Road Metro Stretch' },
+      { lat: 28.4952, lng: 77.0887, area: 'DLF Cyber City Hub' },
+      { lat: 28.4802, lng: 77.0812, area: 'Heritage City / MG Road' },
+      { lat: 28.4673, lng: 77.0864, area: 'Galleria Market Phase 4' },
+      { lat: 28.4593, lng: 77.0725, area: 'Millennium City Centre' },
+      { lat: 28.4682, lng: 77.0645, area: 'Sector 29 Leisure Valley' }
+    ];
+
+    const idx = (progressRatio * (routeWaypoints.length - 1));
+    const lowerIdx = Math.floor(idx);
+    const upperIdx = Math.min(routeWaypoints.length - 1, lowerIdx + 1);
+    const fraction = idx - lowerIdx;
+
+    const p1 = routeWaypoints[lowerIdx];
+    const p2 = routeWaypoints[upperIdx];
+
+    return {
+      lat: +(p1.lat + (p2.lat - p1.lat) * fraction).toFixed(5),
+      lng: +(p1.lng + (p2.lng - p1.lng) * fraction).toFixed(5),
+      area: fraction < 0.5 ? p1.area : p2.area
+    };
+  }
+
+  /**
+   * ====================================================================
+   * CENTRAL TELEMETRY FUNCTION: getReading()
+   * ====================================================================
+   * As specified by user prompt:
+   * "Put all data in one function, getReading(), so the simulated source
+   * can later be replaced by real hydrapack data."
+   * 
+   * Returns a complete, self-contained snapshot of the system state.
+   */
+  function getReading() {
+    const elapsed = state.elapsedShiftMinutes;
+    const progress = Math.min(1.0, elapsed / TOTAL_SHIFT_MINUTES);
+    const dailyGoalMl = calculateHeatGoal(state.outsideTempC);
+    
+    // Target pace at current moment of shift:
+    // If half-way through shift, target is half of daily goal.
+    const targetPaceMl = Math.round(progress * dailyGoalMl);
+    const paceDeficitMl = targetPaceMl - state.totalWaterDrunkMl;
+
+    // Reminder threshold: 30 shift mins above 40°C, otherwise 60 mins
+    const reminderIntervalMins = state.outsideTempC > 40 ? 30 : 60;
+    
+    // Check if reminder is currently due
+    const isSnoozed = elapsed < state.reminderDismissedUntil;
+    const isReminderDue = !isSnoozed && 
+                          (state.minutesSinceLastSip >= reminderIntervalMins) && 
+                          (elapsed > 0) &&
+                          (progress < 1.0);
+
+    // Tank metrics
+    const tankPercent = Math.max(0, Math.min(100, (state.tankLevelMl / state.tankCapacityMl) * 100));
+    const tankLowWarning = state.tankLevelMl <= 300; // <= 20% of 1500 ml
+
+    // Estimated minutes of water left based on average pace or base consumption
+    const averageMlPerShiftMin = state.totalWaterDrunkMl > 0 && elapsed > 10 
+      ? (state.totalWaterDrunkMl / elapsed) 
+      : (dailyGoalMl / TOTAL_SHIFT_MINUTES);
+    const estimatedMinutesLeft = averageMlPerShiftMin > 0 
+      ? Math.round(state.tankLevelMl / averageMlPerShiftMin) 
+      : 120;
+
+    // Body temperature & heat stress
+    // Heat stress warning at 38 °C or more. Stronger alert if also behind on water.
+    const heatStressWarning = state.bodyTempC >= 38.0;
+    const isBehindOnPace = paceDeficitMl > 100;
+    const severeHeatStressWarning = heatStressWarning && isBehindOnPace;
+
+    // Current shift clock string
+    const shiftTimeStr = minutesToClockStr(elapsed);
+
+    // Current Rider location
+    const currentLocation = getRiderCurrentLocation(progress);
+
+    return {
+      timestamp: Date.now(),
+      riderId: state.riderId,
+      riderName: state.riderName,
+      shiftDate: state.shiftDate,
+      shiftTimeStr: shiftTimeStr,
+      elapsedShiftMinutes: Math.round(elapsed),
+      totalShiftMinutes: TOTAL_SHIFT_MINUTES,
+      shiftProgressPercent: +(progress * 100).toFixed(1),
+      isShiftComplete: progress >= 1.0,
+      isSimulating: state.isSimulating,
+      speedMultiplier: state.speedMultiplier,
+
+      // Environmental
+      outsideTempC: state.outsideTempC,
+
+      // Hydration
+      totalWaterDrunkMl: state.totalWaterDrunkMl,
+      dailyGoalMl: dailyGoalMl,
+      targetPaceMl: targetPaceMl,
+      paceDeficitMl: paceDeficitMl,
+      paceStatus: paceDeficitMl <= 50 ? 'on-track' : paceDeficitMl <= 250 ? 'behind' : 'critical-deficit',
+      lastSipMl: state.lastSipMl,
+      minutesSinceLastSip: Math.round(state.minutesSinceLastSip),
+
+      // Tank Status
+      tankCapacityMl: state.tankCapacityMl,
+      tankLevelMl: state.tankLevelMl,
+      tankPercent: +tankPercent.toFixed(1),
+      tankLowWarning: tankLowWarning,
+      estimatedMinutesLeft: Math.max(0, estimatedMinutesLeft),
+
+      // Biothermal
+      bodyTempC: +state.bodyTempC.toFixed(1),
+      peakBodyTempC: +state.peakBodyTempC.toFixed(1),
+      heatStressWarning: heatStressWarning,
+      severeHeatStressWarning: severeHeatStressWarning,
+
+      // Reminders
+      reminderIntervalMins: reminderIntervalMins,
+      isReminderDue: isReminderDue,
+      isSnoozed: isSnoozed,
+      missedRemindersCount: state.missedRemindersCount,
+
+      // Location & Logs
+      riderLocation: currentLocation,
+      hourlyIntake: state.hourlyIntake.slice(),
+      sipsLog: state.sipsLog.slice(),
+      bodyTempHistory: state.bodyTempHistory.slice()
+    };
+  }
+
+  // Log a sip (manual or automated)
+  function recordSip(amountMl, isManual) {
+    if (state.tankLevelMl <= 0) {
+      return { success: false, reason: 'tank_empty' };
+    }
+
+    const sipMl = Math.min(state.tankLevelMl, Math.max(50, Math.round(amountMl)));
+    state.tankLevelMl = Math.max(0, state.tankLevelMl - sipMl);
+    state.totalWaterDrunkMl += sipMl;
+    state.lastSipMl = sipMl;
+    state.minutesSinceLastSip = 0;
+
+    // Body temperature drop: cold hydration provides a soothing cooling effect
+    // e.g. -0.15 °C to -0.25 °C drop after drinking
+    const coolingDrop = (sipMl / 200) * 0.22;
+    state.bodyTempC = Math.max(36.5, +(state.bodyTempC - coolingDrop).toFixed(2));
+
+    // Update hourly intake slot (0 to 7)
+    const currentHourIndex = Math.min(7, Math.floor(state.elapsedShiftMinutes / 60));
+    state.hourlyIntake[currentHourIndex] = (state.hourlyIntake[currentHourIndex] || 0) + sipMl;
+
+    // Add entry to sip log
+    const entry = {
+      id: Date.now() + Math.random().toString(36).substring(2, 6),
+      shiftMinute: Math.round(state.elapsedShiftMinutes),
+      clockStr: minutesToClockStr(state.elapsedShiftMinutes),
+      ml: sipMl,
+      bodyTempC: +state.bodyTempC.toFixed(1),
+      outsideTempC: state.outsideTempC,
+      isManual: !!isManual
+    };
+    state.sipsLog.unshift(entry);
+    if (state.sipsLog.length > 50) {
+      state.sipsLog.pop();
+    }
+
+    // Schedule next automated sip between 30 and 70 shift minutes from now
+    state.nextAutoSipAtMinute = state.elapsedShiftMinutes + (30 + Math.random() * 40);
+
+    // Audio chime
+    playSound('sip');
+
+    saveState();
+    notifyListeners();
+    return { success: true, ml: sipMl };
+  }
+
+  // Refill the 1.5 L hydration tank
+  function refillTank() {
+    state.tankLevelMl = state.tankCapacityMl;
+    playSound('refill');
+    saveState();
+    notifyListeners();
+    return state.tankLevelMl;
+  }
+
+  // Snooze hourly hydration reminder for 10 shift minutes
+  function snoozeReminder(shiftMins = 10) {
+    state.reminderDismissedUntil = state.elapsedShiftMinutes + shiftMins;
+    saveState();
+    notifyListeners();
+  }
+
+  // Set outside temperature (30 to 45 °C)
+  function setOutsideTemp(tempC) {
+    state.outsideTempC = Math.max(30, Math.min(45, Math.round(tempC)));
+    saveState();
+    notifyListeners();
+  }
+
+  // Reset shift back to 11:00 AM
+  function resetShift() {
+    state = createInitialState();
+    saveState();
+    notifyListeners();
+  }
+
+  // Fast forward / simulate a realistic completed shift (for jury inspection)
+  function simulateCompletedShift() {
+    resetShift();
+    state.outsideTempC = 41;
+    let currentMin = 0;
+    while (currentMin < TOTAL_SHIFT_MINUTES) {
+      currentMin += (35 + Math.random() * 30);
+      if (currentMin >= TOTAL_SHIFT_MINUTES) break;
+      state.elapsedShiftMinutes = currentMin;
+      
+      // Auto refill if low
+      if (state.tankLevelMl < 300) {
+        state.tankLevelMl = state.tankCapacityMl;
+      }
+      
+      // Sip
+      const sipSize = Math.floor(100 + Math.random() * 140);
+      recordSip(sipSize, false);
+      
+      // Adjust body temp
+      state.bodyTempC = +(36.7 + Math.random() * 1.3).toFixed(1);
+      if (state.bodyTempC > state.peakBodyTempC) {
+        state.peakBodyTempC = state.bodyTempC;
+      }
+
+      state.bodyTempHistory.push({
+        shiftMinute: Math.round(currentMin),
+        clockStr: minutesToClockStr(currentMin),
+        bodyTempC: state.bodyTempC,
+        outsideTempC: state.outsideTempC
+      });
+    }
+    state.elapsedShiftMinutes = TOTAL_SHIFT_MINUTES;
+    state.isSimulating = false;
+    saveState();
+    notifyListeners();
+  }
+
+  // Biothermal Model Step Function
+  function stepSimulation(deltaShiftMinutes) {
+    if (state.elapsedShiftMinutes >= TOTAL_SHIFT_MINUTES) {
+      state.isSimulating = false;
+      saveState();
+      notifyListeners();
+      return;
+    }
+
+    state.elapsedShiftMinutes += deltaShiftMinutes;
+    state.minutesSinceLastSip += deltaShiftMinutes;
+
+    // Body Temperature Biothermal Dynamics:
+    // 1. Outside heat drive: higher outside temp gently pushes body temp up
+    const heatDrive = (state.outsideTempC - 30) * 0.00045 * deltaShiftMinutes;
+
+    // 2. Dehydration factor: long intervals without water accelerate heat accumulation
+    const reminderThreshold = state.outsideTempC > 40 ? 30 : 60;
+    const dehydrationDrive = (state.minutesSinceLastSip > (reminderThreshold * 0.6))
+      ? 0.0006 * deltaShiftMinutes
+      : 0;
+
+    // 3. Natural cooling tendency toward 36.8 when recent sips exist
+    const coolTendency = (state.bodyTempC > 36.8 && state.minutesSinceLastSip < 20)
+      ? -0.0003 * deltaShiftMinutes
+      : 0;
+
+    state.bodyTempC = +(state.bodyTempC + heatDrive + dehydrationDrive + coolTendency).toFixed(2);
+    
+    // Clamp to realistic clinical range specified in prompt: 36.5 to 38.5 °C
+    state.bodyTempC = Math.max(36.5, Math.min(38.5, state.bodyTempC));
+
+    if (state.bodyTempC > state.peakBodyTempC) {
+      state.peakBodyTempC = state.bodyTempC;
+    }
+
+    // Check if auto sip is triggered
+    if (state.elapsedShiftMinutes >= state.nextAutoSipAtMinute) {
+      if (state.tankLevelMl > 0) {
+        // Random sip between 80 to 250 ml
+        const randomSipMl = Math.floor(80 + Math.random() * 170);
+        recordSip(randomSipMl, false);
+      }
+    }
+
+    // Check hourly hydration reminder trigger
+    const intervalMins = state.outsideTempC > 40 ? 30 : 60;
+    if (state.minutesSinceLastSip >= intervalMins && 
+        state.elapsedShiftMinutes >= state.reminderDismissedUntil) {
+      
+      // Trigger sound & notification once when hitting threshold
+      if ((state.elapsedShiftMinutes - state.lastReminderTriggeredAt) > 15) {
+        state.lastReminderTriggeredAt = state.elapsedShiftMinutes;
+        state.missedRemindersCount++;
+        playSound('reminder');
+        triggerSystemNotification(
+          'HydraRide Alert: Time to Hydrate!',
+          `You have not sipped water for ${Math.round(state.minutesSinceLastSip)} minutes in ${state.outsideTempC}°C heat. Take a sip now to prevent heat strain.`
+        );
+      }
+    }
+
+    // Check high heat stress alert (38.0°C)
+    if (state.bodyTempC >= 38.0 && Math.random() < 0.05) {
+      playSound('heat_alert');
+    }
+
+    // Record trend history every ~10 shift minutes
+    const lastHistory = state.bodyTempHistory[state.bodyTempHistory.length - 1];
+    if (!lastHistory || (state.elapsedShiftMinutes - lastHistory.shiftMinute) >= 10) {
+      state.bodyTempHistory.push({
+        shiftMinute: Math.round(state.elapsedShiftMinutes),
+        clockStr: minutesToClockStr(state.elapsedShiftMinutes),
+        bodyTempC: +state.bodyTempC.toFixed(1),
+        outsideTempC: state.outsideTempC
+      });
+      if (state.bodyTempHistory.length > 50) {
+        state.bodyTempHistory.shift();
+      }
+    }
+
+    saveState();
+    notifyListeners();
+  }
+
+  // Simulation Loop Timer
+  let simTimer = null;
+
+  function startSimulation() {
+    if (simTimer) return;
+    state.isSimulating = true;
+    saveState();
+    notifyListeners();
+
+    simTimer = setInterval(() => {
+      if (!state.isSimulating) {
+        stopSimulation();
+        return;
+      }
+      stepSimulation(SHIFT_MINUTES_PER_TICK * state.speedMultiplier);
+    }, TICK_INTERVAL_MS);
+  }
+
+  function stopSimulation() {
+    if (simTimer) {
+      clearInterval(simTimer);
+      simTimer = null;
+    }
+    state.isSimulating = false;
+    saveState();
+    notifyListeners();
+  }
+
+  function toggleSimulation() {
+    if (state.isSimulating) {
+      stopSimulation();
+    } else {
+      if (state.elapsedShiftMinutes >= TOTAL_SHIFT_MINUTES) {
+        state.elapsedShiftMinutes = 0;
+      }
+      startSimulation();
+    }
+  }
+
+  // State Change Listeners / Observers
+  const listeners = new Set();
+
+  function subscribe(fn) {
+    listeners.add(fn);
+    return () => listeners.delete(fn);
+  }
+
+  function notifyListeners() {
+    const reading = getReading();
+    listeners.forEach(fn => {
+      try { fn(reading); } catch (e) { console.error(e); }
+    });
+  }
+
+  // Listen for storage events from other tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEY) {
+      state = loadState();
+      notifyListeners();
+    } else if (e.key === SETTINGS_KEY) {
+      try { settings = JSON.parse(e.newValue); } catch (err) {}
+    }
+  });
+
+  // Automatically start simulation on load if it was active
+  if (state.isSimulating && state.elapsedShiftMinutes < TOTAL_SHIFT_MINUTES) {
+    startSimulation();
+  }
+
+  // Public HydraCore API export
+  global.HydraCore = {
+    getReading: getReading,
+    recordSip: recordSip,
+    refillTank: refillTank,
+    snoozeReminder: snoozeReminder,
+    setOutsideTemp: setOutsideTemp,
+    resetShift: resetShift,
+    simulateCompletedShift: simulateCompletedShift,
+    startSimulation: startSimulation,
+    stopSimulation: stopSimulation,
+    toggleSimulation: toggleSimulation,
+    subscribe: subscribe,
+    playSound: playSound,
+    requestNotificationPermission: requestNotificationPermission,
+    getSettings: () => ({ ...settings }),
+    setSoundEnabled: (val) => {
+      settings.soundEnabled = !!val;
+      saveSettings();
+    },
+    calculateHeatGoal: calculateHeatGoal,
+    minutesToClockStr: minutesToClockStr
+  };
+
+})(window);
+
+  </script>
+  <script>
+/**
+ * HydraRide - Shared UI & Navigation Helper
+ * Handles theme toggling (light/dark), audio toggles, notification prompt,
+ * and header status badge synchronization across all pages.
+ */
+
+(function () {
+  'use strict';
+
+  // Theme Management
+  const THEME_KEY = 'hydraride_theme_mode';
+
+  function initTheme() {
+    let savedTheme = localStorage.getItem(THEME_KEY);
+    if (!savedTheme) {
+      savedTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    applyTheme(savedTheme);
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    
+    // Update theme toggle icons
+    const themeBtns = document.querySelectorAll('.theme-toggle-btn');
+    themeBtns.forEach(btn => {
+      btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+      btn.setAttribute('title', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+    });
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+  }
+
+  // Bind Navbar Controls
+  document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+
+    // Theme buttons
+    const themeBtns = document.querySelectorAll('.theme-toggle-btn');
+    themeBtns.forEach(btn => {
+      btn.addEventListener('click', toggleTheme);
+    });
+
+    // Sound toggle buttons
+    const soundBtns = document.querySelectorAll('.sound-toggle-btn');
+    if (window.HydraCore) {
+      const updateSoundIcons = () => {
+        const settings = window.HydraCore.getSettings();
+        soundBtns.forEach(btn => {
+          btn.innerHTML = settings.soundEnabled ? '🔊' : '🔇';
+          btn.setAttribute('title', settings.soundEnabled ? 'Mute Audio Alerts' : 'Unmute Audio Alerts');
+        });
+      };
+      updateSoundIcons();
+
+      soundBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const s = window.HydraCore.getSettings();
+          window.HydraCore.setSoundEnabled(!s.soundEnabled);
+          updateSoundIcons();
+        });
+      });
+
+      // Browser notification request
+      const notifBtns = document.querySelectorAll('.notif-toggle-btn');
+      notifBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          window.HydraCore.requestNotificationPermission();
+        });
+      });
+
+      // Subscribe to telemetry to update shared header items
+      window.HydraCore.subscribe(reading => {
+        // Shift clock
+        const clocks = document.querySelectorAll('.header-shift-clock');
+        clocks.forEach(el => {
+          el.textContent = reading.shiftTimeStr;
+        });
+
+        // Status tag (Live / Paused / Complete)
+        const statusTags = document.querySelectorAll('.header-shift-status');
+        statusTags.forEach(el => {
+          if (reading.isShiftComplete) {
+            el.className = 'shift-status-tag status-paused';
+            el.innerHTML = '<span class="dot"></span> Shift Ended';
+          } else if (reading.isSimulating) {
+            el.className = 'shift-status-tag status-live';
+            el.innerHTML = '<span class="dot"></span> Active (Playing)';
+          } else {
+            el.className = 'shift-status-tag status-paused';
+            el.innerHTML = '<span class="dot"></span> Paused';
+          }
+        });
+      });
+
+      // Initial read to sync header
+      const initial = window.HydraCore.getReading();
+      const clocks = document.querySelectorAll('.header-shift-clock');
+      clocks.forEach(el => { el.textContent = initial.shiftTimeStr; });
+    }
+  });
+
+})();
+
+  </script>
+  <script>
+/**
+ * HydraRide - Water Points Map Page (Leaflet + OpenStreetMap)
+ * Features 9 sample free water points around Gurugram.
+ * Tracks rider's simulated location, computes live distances,
+ * highlights the nearest station, and allows direct tank refill.
+ */
+
+(function () {
+  'use strict';
+
+  // 9 Curated Free Water Points around Gurugram
+  const WATER_POINTS = [
+    {
+      id: 'wp-1',
+      name: 'Gurdwara Sri Guru Singh Sabha Chabeel',
+      type: 'Community Pyaau & RO Chabeel',
+      status: 'Operational - Chilled',
+      isWorking: true,
+      lat: 28.4532,
+      lng: 77.0518,
+      address: 'Sector 31 Main Market Road, Gurugram',
+      features: 'Free 24/7 cold drinking water • Shaded two-wheeler parking'
+    },
+    {
+      id: 'wp-2',
+      name: 'Millennium City Centre Metro RO Kiosk',
+      type: 'Metro Station RO Filter',
+      status: 'Operational - RO Purified',
+      isWorking: true,
+      lat: 28.4593,
+      lng: 77.0725,
+      address: 'Concourse Level, Gate 1, Millennium City Centre Metro',
+      features: 'RO purified • Operational 06:00 AM – 11:00 PM'
+    },
+    {
+      id: 'wp-3',
+      name: 'Sector 29 Leisure Valley Municipal Pyaau',
+      type: 'MCG Public Water Cooler',
+      status: 'Operational - Chilled',
+      isWorking: true,
+      lat: 28.4682,
+      lng: 77.0645,
+      address: 'Opposite Leisure Valley Park Entry, Sector 29',
+      features: 'High-capacity municipal water cooler • Bench shade'
+    },
+    {
+      id: 'wp-4',
+      name: 'IFFCO Chowk Metro Gate 2 Dispenser',
+      type: 'Transit Water Kiosk',
+      status: 'Operational - Ambient',
+      isWorking: true,
+      lat: 28.4721,
+      lng: 77.0726,
+      address: 'IFFCO Chowk Flyover Junction, MG Road',
+      features: 'Quick bottle refill for two-wheelers'
+    },
+    {
+      id: 'wp-5',
+      name: 'DLF Cyber Hub Rider Support Cooler',
+      type: 'Gig Delivery Partner Hub',
+      status: 'Operational - Chilled',
+      isWorking: true,
+      lat: 28.4952,
+      lng: 77.0887,
+      address: 'Ground Floor Logistics Bay, DLF Cyber Hub, DLF Phase 2',
+      features: 'Dedicated delivery partner lounge • Chilled water dispenser'
+    },
+    {
+      id: 'wp-6',
+      name: 'Galleria Market Central Fountain Cooler',
+      type: 'Commercial Complex Public Cooler',
+      status: 'Operational - RO Purified',
+      isWorking: true,
+      lat: 28.4673,
+      lng: 77.0864,
+      address: 'DLF Phase IV, Near Central Fountain, Galleria Market',
+      features: 'Open 10:00 AM – 11:30 PM • Filtered water tap'
+    },
+    {
+      id: 'wp-7',
+      name: 'Sikanderpur Metro Interchange RO Point',
+      type: 'Metro Interchange RO Point',
+      status: 'Operational - Chilled',
+      isWorking: true,
+      lat: 28.4818,
+      lng: 77.0927,
+      address: 'Yellow Line & Rapid Metro Concourse Walkway',
+      features: 'Multi-tap high flow RO water dispenser'
+    },
+    {
+      id: 'wp-8',
+      name: 'HP Auto Care Petrol Pump RO Kiosk',
+      type: 'Fuel Station Free RO Water',
+      status: 'Operational - Ambient',
+      isWorking: true,
+      lat: 28.4802,
+      lng: 77.0812,
+      address: 'MG Road, Near Heritage City, Gurugram',
+      features: 'Free 24/7 RO water dispenser for drivers & riders'
+    },
+    {
+      id: 'wp-9',
+      name: 'Sector 14 HUDA Market Public Pyaau',
+      type: 'Public Charitable Water Tap',
+      status: 'Scheduled Maintenance',
+      isWorking: false,
+      lat: 28.4735,
+      lng: 77.0425,
+      address: 'Near Post Office, Sector 14 Market',
+      features: 'Filter cartridge replacement in progress'
+    }
+  ];
+
+  let map = null;
+  let riderMarker = null;
+  let waterMarkers = {};
+  let guideLine = null;
+  let activeFilter = 'all';
+
+  // Calculate distance between two coordinates in km using Haversine formula
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  // Format distance cleanly
+  function formatDist(km) {
+    if (km < 1) {
+      return `${Math.round(km * 1000)} m`;
+    }
+    return `${km.toFixed(2)} km`;
+  }
+
+  // Format estimated ride time (assuming ~22 km/h average courier transit in traffic)
+  function formatRideTime(km) {
+    const mins = Math.max(1, Math.round((km / 22) * 60));
+    return `~${mins} min ride`;
+  }
+
+  // Create custom SVG markers
+  function createCustomIcon(type, isNearest) {
+    if (type === 'rider') {
+      return L.divIcon({
+        className: 'custom-rider-pin',
+        html: `
+          <div style="
+            position: relative;
+            width: 38px;
+            height: 38px;
+            background: #0284c7;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.6);
+            color: #ffffff;
+            font-size: 18px;
+          ">
+            🛵
+            <div style="
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              border: 2px solid #38bdf8;
+              animation: riderPulse 1.8s infinite;
+              pointer-events: none;
+            "></div>
+          </div>
+        `,
+        iconSize: [38, 38],
+        iconAnchor: [19, 19]
+      });
+    }
+
+    // Water Point Icon
+    const bg = isNearest ? '#10b981' : (type === 'maintenance' ? '#94a3b8' : '#0ea5e9');
+    const border = isNearest ? '#ffffff' : '#ffffff';
+    const shadow = isNearest ? '0 4px 16px rgba(16, 185, 129, 0.6)' : '0 2px 8px rgba(0,0,0,0.25)';
+
+    return L.divIcon({
+      className: isNearest ? 'custom-water-pin nearest' : 'custom-water-pin',
+      html: `
+        <div style="
+          width: 32px;
+          height: 32px;
+          background: ${bg};
+          border: 2px solid ${border};
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: ${shadow};
+          color: #ffffff;
+        ">
+          <div style="transform: rotate(45deg); font-size: 14px; font-weight: 700;">
+            ${isNearest ? '⭐' : '💧'}
+          </div>
+        </div>
+      `,
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+  }
+
+  // Initialize Leaflet Map
+  function initMap() {
+    const reading = window.HydraCore ? window.HydraCore.getReading() : {
+      riderLocation: { lat: 28.4682, lng: 77.0645 }
+    };
+
+    // Center between Cyber City, Sector 29 and Millennium City Centre
+    const center = [reading.riderLocation.lat, reading.riderLocation.lng];
+    map = L.map('waterMap', {
+      center: center,
+      zoom: 13,
+      zoomControl: true
+    });
+
+    // Clean OpenStreetMap tiles
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add CSS keyframe for rider marker pulse
+    const styleEl = document.createElement('style');
+    styleEl.innerHTML = `
+      @keyframes riderPulse {
+        0% { transform: scale(1); opacity: 0.9; }
+        100% { transform: scale(2.2); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(styleEl);
+
+    // Initial render of markers and list
+    updateWaterPoints(reading);
+  }
+
+  // Recalculate distances, sort, update map markers, and build sidebar
+  function updateWaterPoints(reading) {
+    if (!map) return;
+
+    const riderLat = reading.riderLocation.lat;
+    const riderLng = reading.riderLocation.lng;
+
+    // Update or add Rider Marker
+    if (!riderMarker) {
+      riderMarker = L.marker([riderLat, riderLng], {
+        icon: createCustomIcon('rider', false),
+        zIndexOffset: 1000
+      }).addTo(map);
+
+      riderMarker.bindPopup(`
+        <div style="font-family: inherit; font-size: 13px; line-height: 1.4;">
+          <strong>🛵 Rider #214 (Active)</strong><br>
+          ${reading.riderLocation.area}<br>
+          <span style="color:#0284c7; font-weight:600;">Shift: 11:00 AM – 7:00 PM</span>
+        </div>
+      `);
+    } else {
+      riderMarker.setLatLng([riderLat, riderLng]);
+    }
+
+    // Calculate distances to all points
+    const pointsWithDist = WATER_POINTS.map(pt => {
+      const distKm = haversineDistance(riderLat, riderLng, pt.lat, pt.lng);
+      return {
+        ...pt,
+        distKm: distKm,
+        distFormatted: formatDist(distKm),
+        rideTimeFormatted: formatRideTime(distKm)
+      };
+    });
+
+    // Sort by distance (working points first, then closest)
+    pointsWithDist.sort((a, b) => {
+      if (a.isWorking && !b.isWorking) return -1;
+      if (!a.isWorking && b.isWorking) return 1;
+      return a.distKm - b.distKm;
+    });
+
+    // Identify nearest working point
+    const nearestPoint = pointsWithDist.find(p => p.isWorking) || pointsWithDist[0];
+
+    // Draw / Update Guide Line from Rider to Nearest Water Point
+    if (guideLine) {
+      map.removeLayer(guideLine);
+    }
+    if (nearestPoint) {
+      guideLine = L.polyline(
+        [[riderLat, riderLng], [nearestPoint.lat, nearestPoint.lng]],
+        {
+          color: '#10b981',
+          weight: 3,
+          dashArray: '6, 8',
+          opacity: 0.85
+        }
+      ).addTo(map);
+    }
+
+    // Render / Update Markers on Leaflet Map
+    pointsWithDist.forEach(pt => {
+      const isNearest = pt.id === nearestPoint.id;
+      const markerType = !pt.isWorking ? 'maintenance' : (isNearest ? 'nearest' : 'normal');
+      const icon = createCustomIcon(markerType, isNearest);
+
+      if (waterMarkers[pt.id]) {
+        waterMarkers[pt.id].setLatLng([pt.lat, pt.lng]);
+        waterMarkers[pt.id].setIcon(icon);
+      } else {
+        const marker = L.marker([pt.lat, pt.lng], { icon: icon }).addTo(map);
+        marker.on('click', () => {
+          highlightCard(pt.id);
+        });
+        waterMarkers[pt.id] = marker;
+      }
+
+      // Popup Content
+      const popupContent = `
+        <div style="font-family: inherit; font-size: 13px; min-width: 200px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
+            <strong style="font-size: 14px; color:#0f172a;">${pt.name}</strong>
+            ${isNearest ? '<span style="background:#ecfdf5; color:#065f46; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px;">NEAREST</span>' : ''}
+          </div>
+          <div style="color: #64748b; font-size: 11px; margin-bottom: 6px;">${pt.type}</div>
+          <div style="margin-bottom: 6px;">
+            <span style="font-size: 11px; font-weight: 600; padding: 2px 6px; border-radius: 4px; ${pt.isWorking ? 'background:#ecfdf5; color:#065f46;' : 'background:#fee2e2; color:#991b1b;'}">
+              ${pt.status}
+            </span>
+          </div>
+          <div style="font-size: 12px; color: #334155; margin-bottom: 8px;">
+            📍 ${pt.address}<br>
+            📏 <strong>${pt.distFormatted}</strong> (${pt.rideTimeFormatted})
+          </div>
+          <div style="font-size: 11px; color:#64748b; margin-bottom: 8px;">
+            💡 ${pt.features}
+          </div>
+          <button onclick="window.HydraMapRefill()" style="
+            width: 100%;
+            background: #0284c7;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+          ">
+            🚰 Refill Hydrapack Here (1.5L)
+          </button>
+        </div>
+      `;
+      waterMarkers[pt.id].bindPopup(popupContent);
+    });
+
+    // Update Nearest Spotlight Card
+    renderNearestSpotlight(nearestPoint, reading);
+
+    // Update Sidebar List
+    renderSidebarList(pointsWithDist, nearestPoint);
+
+    // Update Tank Status Bar
+    renderTankBadge(reading);
+  }
+
+  // Render Nearest Station Spotlight Card
+  function renderNearestSpotlight(nearest, reading) {
+    const el = document.getElementById('nearestSpotlightCard');
+    if (!el || !nearest) return;
+
+    el.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 0.5rem;">
+        <div>
+          <div style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #059669; letter-spacing: 0.05em;">
+            ⭐ Nearest Water Point (${nearest.distFormatted})
+          </div>
+          <div style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin-top: 0.2rem;">
+            ${nearest.name}
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">
+            ${nearest.address}
+          </div>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btnQuickRefillNearest" title="Refill hydrapack tank now">
+          🚰 Refill Now
+        </button>
+      </div>
+
+      <div style="display:flex; align-items:center; gap: 0.75rem; margin-top: 0.65rem; font-size: 0.8rem;">
+        <span class="water-point-status status-working">✓ ${nearest.status}</span>
+        <span style="color: var(--primary); font-weight: 700;">⏱️ ${nearest.rideTimeFormatted}</span>
+        <span style="color: var(--text-muted);">•</span>
+        <span style="color: var(--text-secondary);">${nearest.features.split('•')[0]}</span>
+      </div>
+    `;
+
+    const btnRefill = document.getElementById('btnQuickRefillNearest');
+    if (btnRefill) {
+      btnRefill.addEventListener('click', () => {
+        window.HydraCore.refillTank();
+      });
+    }
+  }
+
+  // Render Tank level badge in header of map
+  function renderTankBadge(reading) {
+    const badge = document.getElementById('mapTankBadge');
+    if (!badge) return;
+
+    if (reading.tankLowWarning) {
+      badge.className = 'sim-pill';
+      badge.style.background = '#fee2e2';
+      badge.style.borderColor = '#fca5a5';
+      badge.style.color = '#991b1b';
+      badge.innerHTML = `⚠️ Tank Low: ${reading.tankLevelMl} ml (${reading.tankPercent}%)`;
+    } else {
+      badge.className = 'sim-pill';
+      badge.style.background = 'var(--water-100)';
+      badge.style.borderColor = 'var(--water-200)';
+      badge.style.color = 'var(--water-700)';
+      badge.innerHTML = `💧 Tank: ${reading.tankLevelMl} ml (${reading.tankPercent}%)`;
+    }
+  }
+
+  // Render the list of water points in sidebar
+  function renderSidebarList(points, nearest) {
+    const listEl = document.getElementById('waterPointsList');
+    if (!listEl) return;
+
+    // Filter points
+    let filtered = points;
+    if (activeFilter === 'metro') {
+      filtered = points.filter(p => p.type.toLowerCase().includes('metro'));
+    } else if (activeFilter === 'chabeel') {
+      filtered = points.filter(p => p.type.toLowerCase().includes('pyaau') || p.type.toLowerCase().includes('chabeel'));
+    } else if (activeFilter === 'working') {
+      filtered = points.filter(p => p.isWorking);
+    }
+
+    listEl.innerHTML = filtered.map(pt => {
+      const isNearest = pt.id === nearest.id;
+      return `
+        <div class="water-point-card ${isNearest ? 'featured' : ''}" id="card-${pt.id}" onclick="window.HydraMapFocus('${pt.id}')">
+          <div class="water-point-title">
+            <span>${pt.name}</span>
+            ${isNearest ? '<span class="water-point-status status-working">⭐ NEAREST</span>' : ''}
+          </div>
+          <div class="water-point-type">${pt.type}</div>
+          <div style="font-size: 0.76rem; color: var(--text-secondary); margin-top: 0.25rem;">
+            ${pt.address}
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 0.5rem;">
+            <span class="water-point-status ${pt.isWorking ? 'status-working' : 'status-paused'}">
+              ${pt.status}
+            </span>
+            <span class="water-point-dist">
+              📏 ${pt.distFormatted} (${pt.rideTimeFormatted})
+            </span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Highlight card when marker is clicked
+  function highlightCard(id) {
+    const card = document.getElementById(`card-${id}`);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      card.style.outline = '2px solid var(--primary)';
+      setTimeout(() => { card.style.outline = ''; }, 2000);
+    }
+  }
+
+  // Global handler for clicking a card or button to focus marker on map
+  window.HydraMapFocus = function (id) {
+    const pt = WATER_POINTS.find(p => p.id === id);
+    if (pt && map && waterMarkers[id]) {
+      map.setView([pt.lat, pt.lng], 15, { animate: true });
+      waterMarkers[id].openPopup();
+    }
+  };
+
+  // Global handler for the refill action in Leaflet popups
+  window.HydraMapRefill = function () {
+    if (window.HydraCore) {
+      window.HydraCore.refillTank();
+      alert('Hydrapack refilled successfully to 1,500 ml!');
+    }
+  };
+
+  // Filter chips
+  function bindFilters() {
+    const filterButtons = document.querySelectorAll('[data-map-filter]');
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        filterButtons.forEach(b => b.className = 'btn btn-secondary btn-sm');
+        btn.className = 'btn btn-primary btn-sm';
+        activeFilter = btn.getAttribute('data-map-filter');
+        if (window.HydraCore) {
+          updateWaterPoints(window.HydraCore.getReading());
+        }
+      });
+    });
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    bindFilters();
+
+    // Subscribe to telemetry changes so rider movement & tank levels sync live
+    if (window.HydraCore) {
+      window.HydraCore.subscribe(reading => {
+        updateWaterPoints(reading);
+      });
+    }
+  });
+
+})();
+
+  </script>
 </body>
 </html>
