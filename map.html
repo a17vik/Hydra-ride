@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydraRide — Gurugram Free Water Points Map</title>
+  <meta name="description" content="Find verified free drinking water points, pyaaus, and metro RO stations for delivery riders across Gurugram.">
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+          </div>
+          <span>HydraRide</span>
+          <span class="brand-badge">Jury Demo</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li class="nav-item"><a href="index.html">💧 Dashboard</a></li>
+            <li class="nav-item"><a href="map.html" class="active">🗺️ Water Points Map</a></li>
+            <li class="nav-item"><a href="summary.html">📊 Shift Summary</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="sim-pill" title="Hardware is in prototyping. All data is simulated in real-time.">
+            <span class="dot"></span> Simulated data
+          </div>
+          <button class="btn-icon sound-toggle-btn" title="Toggle Sound Alerts" aria-label="Toggle Sound">🔊</button>
+          <button class="btn-icon notif-toggle-btn" title="Enable Browser Push Notifications" aria-label="Enable Notifications">🔔</button>
+          <button class="btn-icon theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌙</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Rider Shift Context Sub-bar -->
+  <section class="rider-subbar">
+    <div class="container">
+      <div class="rider-subbar-inner">
+        <div class="rider-meta">
+          <span class="rider-badge">🛵 Rider #214</span>
+          <span style="color:var(--text-muted);">•</span>
+          <span style="color:var(--text-secondary);">Shift: <strong>11:00 AM – 7:00 PM</strong></span>
+          <span style="color:var(--text-muted);">•</span>
+          <span>Shift Time: <span class="rider-shift-clock header-shift-clock">11:00 AM</span></span>
+        </div>
+        <div class="rider-meta">
+          <span id="mapTankBadge" class="sim-pill">💧 Tank: 1,500 ml (100%)</span>
+          <span class="header-shift-status shift-status-tag status-paused"><span class="dot"></span> Paused</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">
+            <span>Free Water Points & Refill Network</span>
+          </h1>
+          <p class="page-subtitle">
+            Curated, verified free water points across Gurugram delivery corridors: Metro RO kiosks, municipal coolers, and community pyaaus.
+          </p>
+        </div>
+        <div>
+          <a href="index.html" class="btn btn-secondary btn-sm">← Back to Dashboard</a>
+        </div>
+      </div>
+
+      <!-- Map & Sidebar Split Layout -->
+      <div class="map-layout-grid">
+
+        <!-- Left: Leaflet Interactive Map -->
+        <div class="map-container-wrap">
+          <div id="waterMap"></div>
+        </div>
+
+        <!-- Right: Nearest Point Spotlight & Directory -->
+        <aside class="map-sidebar">
+          
+          <!-- Nearest Station Spotlight Card -->
+          <div class="card" id="nearestSpotlightCard" style="border: 2px solid #10b981; background: var(--color-success-bg);">
+            <!-- Populated dynamically by map.js -->
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Calculating nearest refill point...</div>
+          </div>
+
+          <!-- Directory Filter Buttons -->
+          <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" data-map-filter="all">All Points</button>
+            <button class="btn btn-secondary btn-sm" data-map-filter="metro">Metro RO</button>
+            <button class="btn btn-secondary btn-sm" data-map-filter="chabeel">Pyaau / Chabeel</button>
+            <button class="btn btn-secondary btn-sm" data-map-filter="working">Operational Only</button>
+          </div>
+
+          <!-- Water Points Directory List -->
+          <div id="waterPointsList" style="display:flex; flex-direction:column; gap:0.75rem; flex:1; overflow-y:auto; padding-right: 0.25rem;">
+            <!-- Rendered by js/map.js -->
+          </div>
+
+        </aside>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <strong>HydraRide</strong> — Smart Refill Locator for Food Delivery Couriers.
+          <span style="margin-left: 0.5rem; color: var(--text-muted);">Gurugram Region Sample</span>
+        </div>
+        <div>
+          <a href="index.html" style="margin-right: 1rem;">Dashboard</a>
+          <a href="summary.html">Shift Summary</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- HydraRide Scripts -->
+  <script src="js/hydra-core.js"></script>
+  <script src="js/shared-ui.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>

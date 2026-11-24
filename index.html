@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydraRide — Smart Hydration & Heat Safety Dashboard</title>
+  <meta name="description" content="HydraRide: Smart hydrapack telemetry and heat safety monitoring for food delivery riders in extreme urban weather.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+          </div>
+          <span>HydraRide</span>
+          <span class="brand-badge">Jury Demo</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li class="nav-item"><a href="index.html" class="active">💧 Dashboard</a></li>
+            <li class="nav-item"><a href="map.html">🗺️ Water Points Map</a></li>
+            <li class="nav-item"><a href="summary.html">📊 Shift Summary</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="sim-pill" title="Hardware is in prototyping. All data is simulated in real-time.">
+            <span class="dot"></span> Simulated data
+          </div>
+          <button class="btn-icon sound-toggle-btn" title="Toggle Sound Alerts" aria-label="Toggle Sound">🔊</button>
+          <button class="btn-icon notif-toggle-btn" title="Enable Browser Push Notifications" aria-label="Enable Notifications">🔔</button>
+          <button class="btn-icon theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌙</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Rider Shift Context Sub-bar -->
+  <section class="rider-subbar">
+    <div class="container">
+      <div class="rider-subbar-inner">
+        <div class="rider-meta">
+          <span class="rider-badge">🛵 Rider #214</span>
+          <span style="color:var(--text-muted);">•</span>
+          <span style="color:var(--text-secondary);">Shift: <strong>11:00 AM – 7:00 PM</strong></span>
+          <span style="color:var(--text-muted);">•</span>
+          <span>Shift Time: <span class="rider-shift-clock header-shift-clock">11:00 AM</span></span>
+        </div>
+        <div class="rider-meta">
+          <span class="header-shift-status shift-status-tag status-paused"><span class="dot"></span> Paused</span>
+          <span style="color:var(--text-muted); font-size: 0.78rem;">100s full shift playback</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Dynamic Alert Banners -->
+      <!-- 1. Hourly Reminder Banner -->
+      <div id="reminderBanner" class="alert-banner alert-warning" style="display: none;">
+        <div class="alert-banner-content">
+          <span class="alert-icon">⏰</span>
+          <span id="reminderBannerText">
+            <strong>⚠️ Hydration Reminder:</strong> No sip logged for 60 minutes. Sip water now to avoid thermal fatigue.
+          </span>
+        </div>
+        <div class="alert-actions">
+          <button id="btnSnoozeReminder" class="btn btn-secondary btn-sm">Snooze 10 min</button>
+          <button id="btnReminderQuickSip" class="btn btn-primary btn-sm">Sip 200 ml Now</button>
+        </div>
+      </div>
+
+      <!-- 2. Heat Stress Warning Banner -->
+      <div id="heatStressBanner" class="alert-banner alert-danger" style="display: none;">
+        <div class="alert-banner-content">
+          <span class="alert-icon">🌡️</span>
+          <span id="heatStressText">
+            <strong>⚠️ Heat Stress Warning:</strong> Body temperature is elevated (≥ 38.0°C). Rehydrate and rest in shade.
+          </span>
+        </div>
+      </div>
+
+      <!-- 3. Low Tank Warning Banner -->
+      <div id="tankLowBanner" class="alert-banner alert-warning" style="display: none;">
+        <div class="alert-banner-content">
+          <span class="alert-icon">⚠️</span>
+          <span id="tankLowText">
+            <strong>⚠️ Hydrapack Low:</strong> Tank is below 20%. Refill at a water station.
+          </span>
+        </div>
+        <div class="alert-actions">
+          <a href="map.html" class="btn btn-secondary btn-sm">Open Water Map →</a>
+        </div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1 class="page-title">
+          <span>Rider Hydration & Biothermal Telemetry</span>
+        </h1>
+        <p class="page-subtitle">
+          Real-time smart hydrapack intake monitoring, heat-stress prevention, and algorithmic pacing for food delivery couriers.
+        </p>
+      </div>
+
+      <!-- Dashboard Main Grid -->
+      <div class="dashboard-grid">
+
+        <!-- Column 1: Water Intake & Hydrapack Reservoir Visual (Span 7) -->
+        <div class="col-7">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
+                Water Intake & Target Pace
+              </span>
+              <span id="paceStatusBadge" class="card-badge status-live">On Track</span>
+            </div>
+
+            <!-- Total Drunk Big Readout -->
+            <div class="metric-value-row">
+              <span class="metric-big" id="totalWaterDrunk">0</span>
+              <span class="metric-unit">/ <span id="dailyGoalMl">2,800</span> ml</span>
+            </div>
+            <div class="metric-sub" id="goalCalcExplainer">
+              Base: 2,000 ml + 800 ml (+8°C ambient heat at 38°C)
+            </div>
+
+            <!-- Graphic Pack Reservoir Widget -->
+            <div class="pack-widget-container">
+              <!-- Visual Hydrapack Bladder -->
+              <div class="pack-visual" title="Smart Hydrapack Reservoir (Fills as rider drinks)">
+                <div class="pack-cap"></div>
+                <div class="pack-hose"></div>
+                
+                <!-- Graduations -->
+                <div class="pack-graduations">
+                  <div class="pack-mark"><span>Goal</span></div>
+                  <div class="pack-mark"><span>75%</span></div>
+                  <div class="pack-mark"><span>50%</span></div>
+                  <div class="pack-mark"><span>25%</span></div>
+                  <div class="pack-mark"><span>0</span></div>
+                </div>
+
+                <!-- Liquid Level -->
+                <div class="pack-liquid" id="packLiquid">
+                  <div class="pack-wave"></div>
+                </div>
+
+                <!-- Target Pace Marker (Dashed Line) -->
+                <div class="pack-target-line" id="packTargetLine" style="bottom: 0%;">
+                  <span class="pack-target-label" id="packTargetLabel">Pace: 0 ml</span>
+                </div>
+              </div>
+
+              <!-- Pacing Stats -->
+              <div class="pack-stats">
+                <div class="stat-row">
+                  <span class="stat-label">Current Target Pace:</span>
+                  <span class="stat-val" id="targetPaceVal">0 ml</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Pace Status:</span>
+                  <span class="stat-val" id="paceDifferenceVal">+0 ml (On Track)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Pacing Method:</span>
+                  <span class="stat-val" style="font-size: 0.8rem; font-weight: 500;">Linear Heat-Adjusted Schedule</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; line-height: 1.4;">
+                  The dashed amber marker shows where the rider should be right now to prevent insidious dehydration.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Column 2: Tank Level & Refill (Span 5) -->
+        <div class="col-5">
+          <div class="card" style="margin-bottom: 1.25rem;">
+            <div class="card-header">
+              <span class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="6" y="2" width="12" height="20" rx="3"/>
+                  <path d="M10 6h4"/>
+                </svg>
+                Hydrapack Tank Level (1.5 L)
+              </span>
+              <span id="tankPercentVal" class="card-badge">100%</span>
+            </div>
+
+            <div class="metric-value-row">
+              <span class="metric-big" id="tankLevelMl">1,500</span>
+              <span class="metric-unit">/ 1,500 ml</span>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="tankProgressBar" style="width: 100%;"></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.6rem;">
+              <span class="metric-sub" id="tankMinutesLeft">~180 min left</span>
+              <button id="btnRefillTank" class="btn btn-secondary btn-sm" title="Refill backpack to 1,500 ml">
+                🚰 Refill Tank (1.5L)
+              </button>
+            </div>
+            
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.6rem;">
+              ⚠️ Automatically alerts below 20% (300 ml) with directions to nearest free water station.
+            </div>
+          </div>
+
+          <!-- Body Temperature Card -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                </svg>
+                Body Core Temperature
+              </span>
+              <span id="bodyTempStatusBadge" class="card-badge status-live">Normal</span>
+            </div>
+
+            <div class="metric-value-row">
+              <span class="metric-big" id="bodyTempVal">36.8</span>
+              <span class="metric-unit">°C</span>
+              <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: 0.5rem;">
+                Peak: <strong id="peakBodyTempVal">36.8 °C</strong>
+              </span>
+            </div>
+
+            <!-- Live Canvas Trend Graph -->
+            <div class="temp-chart-container">
+              <canvas id="tempChartCanvas" class="temp-chart-canvas"></canvas>
+            </div>
+
+            <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 0.4rem;">
+              Normal: 36.5 – 37.5°C • <strong>Heat Stress: ≥ 38.0°C</strong>. Drops with cool sips; rises with heat & water gaps.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Row 2: Controls & Ambient Environmental Simulation (Span 12) -->
+        <div class="col-12">
+          <div class="sim-controls-card">
+            <div class="card-header" style="margin-bottom: 0.75rem;">
+              <span class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Jury Presentation Simulation Controls
+              </span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">
+                Full 8-Hour Shift (11am – 7pm) plays in ~100 seconds
+              </span>
+            </div>
+
+            <div class="controls-flex">
+              <!-- Play / Sip / Reset Action Group -->
+              <div class="controls-group">
+                <button id="btnPlayPause" class="btn btn-primary">▶️ Play Shift</button>
+                <button id="btnLogSip" class="btn btn-secondary">🥤 Log a 200 ml Sip</button>
+                <button id="btnResetShift" class="btn btn-secondary" title="Reset back to 11:00 AM">🔄 Restart Shift</button>
+              </div>
+
+              <!-- Ambient Temperature Slider -->
+              <div class="controls-group">
+                <div class="temp-slider-wrap">
+                  <span class="temp-slider-label">Outside Heat:</span>
+                  <input type="range" id="tempSlider" class="temp-slider" min="30" max="45" value="38" step="1">
+                  <span class="temp-slider-val" id="tempSliderVal">38°C</span>
+                  <span class="card-badge" id="tempSeverityBadge">Very High Heat</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shift Timeline Progress Bar -->
+            <div class="shift-timeline-wrap">
+              <div class="shift-timeline-header">
+                <span>Shift Start: <strong>11:00 AM</strong></span>
+                <span id="shiftPercentDisplay">0% of shift (0 / 480 min)</span>
+                <span>Shift End: <strong>07:00 PM</strong></span>
+              </div>
+              <div class="shift-progress-track">
+                <div class="shift-progress-fill" id="shiftProgressBar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Row 3: Recent Activity Telemetry Table (Span 12) -->
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Recent Hydrapack Telemetry Events
+              </span>
+              <a href="summary.html" class="btn btn-secondary btn-sm">Full Shift Summary & Analytics →</a>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Shift Time</th>
+                    <th>Volume Sipped</th>
+                    <th>Core Temp</th>
+                    <th>Ambient Temp</th>
+                  </tr>
+                </thead>
+                <tbody id="recentSipsList">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <strong>HydraRide</strong> — IoT Heat-Safety & Hydration Vest for Delivery Riders.
+          <span style="margin-left: 0.5rem; color: var(--text-muted);">Simulated Jury Demo v1.0</span>
+        </div>
+        <div>
+          <a href="map.html" style="margin-right: 1rem;">Water Points Map</a>
+          <a href="summary.html">Shift Summary</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/hydra-core.js"></script>
+  <script src="js/shared-ui.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

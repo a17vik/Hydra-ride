@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydraRide — Rider Shift Summary & Health Score</title>
+  <meta name="description" content="Comprehensive shift hydration report, heat stress analysis, and hourly intake pacing for Rider #214.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="site-header">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="brand">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+          </div>
+          <span>HydraRide</span>
+          <span class="brand-badge">Jury Demo</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li class="nav-item"><a href="index.html">💧 Dashboard</a></li>
+            <li class="nav-item"><a href="map.html">🗺️ Water Points Map</a></li>
+            <li class="nav-item"><a href="summary.html" class="active">📊 Shift Summary</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-actions">
+          <div class="sim-pill" title="Hardware is in prototyping. All data is simulated in real-time.">
+            <span class="dot"></span> Simulated data
+          </div>
+          <button class="btn-icon sound-toggle-btn" title="Toggle Sound Alerts" aria-label="Toggle Sound">🔊</button>
+          <button class="btn-icon notif-toggle-btn" title="Enable Browser Push Notifications" aria-label="Enable Notifications">🔔</button>
+          <button class="btn-icon theme-toggle-btn" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">🌙</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Rider Shift Context Sub-bar -->
+  <section class="rider-subbar">
+    <div class="container">
+      <div class="rider-subbar-inner">
+        <div class="rider-meta">
+          <span class="rider-badge">🛵 Rider #214</span>
+          <span style="color:var(--text-muted);">•</span>
+          <span style="color:var(--text-secondary);">Shift: <strong>11:00 AM – 7:00 PM</strong></span>
+          <span style="color:var(--text-muted);">•</span>
+          <span>Shift Time: <span class="rider-shift-clock header-shift-clock">11:00 AM</span></span>
+        </div>
+        <div class="rider-meta">
+          <span class="header-shift-status shift-status-tag status-paused"><span class="dot"></span> Paused</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Page Header with Return Button -->
+      <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <h1 class="page-title">
+            <span>Shift Hydration & Thermal Summary</span>
+          </h1>
+          <p class="page-subtitle">
+            Post-shift telemetry audit: volume adherence, heat strain prevention, and biothermal pacing records.
+          </p>
+        </div>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <a href="index.html" class="btn btn-primary btn-sm">← Back to Dashboard</a>
+          <button id="btnSimulateCompleteShift" class="btn btn-secondary btn-sm" title="Quickly load a finished 8-hour shift for demonstration">
+            ⚡ Instant Full Shift Demo
+          </button>
+          <button id="btnSummaryReset" class="btn btn-secondary btn-sm" title="Reset all telemetry">
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero Hydration Score Card -->
+      <div class="score-hero-card">
+        <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+          <div class="score-circle">
+            <span class="score-num" id="scoreCircleNum">--</span>
+            <span class="score-label">Hydration Score</span>
+          </div>
+          <div>
+            <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom: 0.35rem;">
+              <h2 style="font-size: 1.45rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;">
+                Shift Health & Safety Rating
+              </h2>
+              <span id="scoreGradeBadge" class="brand-badge" style="font-size:0.8rem; padding: 0.2rem 0.6rem;">Grade --</span>
+            </div>
+            <p id="scoreVerdictText" style="color:var(--text-secondary); max-width: 540px; font-size: 0.95rem;">
+              Evaluating shift hydration volume, thermal spikes, and prompt response to interval reminders.
+            </p>
+            <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+              <span class="card-badge" id="scorePillVolume">Volume: --/40</span>
+              <span class="card-badge" id="scorePillThermal">Thermal: --/30</span>
+              <span class="card-badge" id="scorePillPacing">Pacing: --/30</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:right; font-size:0.85rem; color:var(--text-muted);">
+          <div>Courier ID: <strong>#214</strong></div>
+          <div>Region: <strong>Gurugram Hub</strong></div>
+          <div>Pack Hardware: <strong>HydraVest v1 (Simulated)</strong></div>
+        </div>
+      </div>
+
+      <!-- 4 Core Metrics Grid -->
+      <div class="dashboard-grid" style="margin-bottom: 1.5rem;">
+        
+        <!-- Metric 1: Total Water Drunk -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">💧 Total Water Drunk</span>
+              <span class="card-badge">Intake</span>
+            </div>
+            <div class="metric-big" id="summaryTotalWater">0 ml</div>
+            <div class="metric-sub" style="margin-top:0.35rem;">
+              Calculated via onboard flowmeter sensor
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 2: Heat-Based Goal Reached % -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🎯 Goal Reached</span>
+              <span class="card-badge">Heat-Adjusted</span>
+            </div>
+            <div class="metric-big" id="summaryGoalPercent">0%</div>
+            <div class="metric-sub" id="summaryGoalSub" style="margin-top:0.35rem;">
+              Goal: 2,800 ml (Based on ambient heat)
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 3: Peak Body Core Temperature -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🌡️ Peak Body Temperature</span>
+              <span class="card-badge">Biothermal</span>
+            </div>
+            <div class="metric-big" id="summaryPeakTemp">36.8 °C</div>
+            <div class="metric-sub" id="summaryPeakTempSub" style="margin-top:0.35rem;">
+              Safe homeostatic range (< 38.0°C)
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric 4: Missed Reminders Count -->
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">⏰ Missed Reminders</span>
+              <span class="card-badge">Intervals</span>
+            </div>
+            <div class="metric-big" id="summaryMissedReminders">0</div>
+            <div class="metric-sub" id="summaryMissedRemindersSub" style="margin-top:0.35rem;">
+              Gaps exceeding 60 min (or 30 min at >40°C)
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Hourly Water Breakdown Chart Card -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div>
+            <span class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="12" width="4" height="9"/>
+                <rect x="10" y="7" width="4" height="14"/>
+                <rect x="17" y="3" width="4" height="18"/>
+              </svg>
+              Water Intake Per Shift Hour (11:00 AM – 07:00 PM)
+            </span>
+            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">
+              Bars show volume sipped each hour. The dashed amber line indicates the recommended hourly pace to prevent cumulative thermal debt.
+            </div>
+          </div>
+        </div>
+
+        <div class="hourly-chart-wrap">
+          <canvas id="hourlyChartCanvas" class="hourly-chart-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Shift Sip Log History Table -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"/>
+              <line x1="8" y1="12" x2="21" y2="12"/>
+              <line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/>
+              <line x1="3" y1="12" x2="3.01" y2="12"/>
+              <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            Complete Shift Sips Log
+          </span>
+          <span class="card-badge">Chronological</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Event #</th>
+                <th>Shift Clock</th>
+                <th>Intake Volume</th>
+                <th>Core Temp</th>
+                <th>Ambient Temp</th>
+              </tr>
+            </thead>
+            <tbody id="shiftSipLogTable">
+              <!-- Populated dynamically by summary.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <strong>HydraRide</strong> — Shift Health & Safety Summary.
+          <span style="margin-left: 0.5rem; color: var(--text-muted);">Delivery Rider Occupational Health</span>
+        </div>
+        <div>
+          <a href="index.html" style="margin-right: 1rem;">Dashboard</a>
+          <a href="map.html">Water Points Map</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/hydra-core.js"></script>
+  <script src="js/shared-ui.js"></script>
+  <script src="js/summary.js"></script>
+</body>
+</html>
